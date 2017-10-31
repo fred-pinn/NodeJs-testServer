@@ -14,6 +14,8 @@ var noPadding = false;
 var htmlRender = new HtmlRender_1["default"]();
 var app = express();
 var urlEncodedParser = bodyParser.urlencoded({ limit: '100mb', extended: false });
+var port = parseInt((process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || '8181'));
+var hostName = process.env.IP || process.env.OPENSHIFT_NODEJS_IP || process.env.COMPUTERNAME + "." + process.env.USERDNSDOMAIN || '0.0.0.0';
 //let mkdirp = require(mkdirp);
 mkdirp("./Public/Images/", function (err) {
     fs.copyFileSync("./android.js", "./Public/android.js");
@@ -91,7 +93,7 @@ mkdirp("./Public/Images/", function (err) {
         console.log("viewImage");
         res.end(JSON.stringify({ "status": "OK" }));
     });
-    var server = app.listen(8181, "android.touchcommerce.com", function () {
+    var server = app.listen(port, hostName, function () {
         var host = server.address().address;
         var port = server.address().port;
         console.info("==> Listening: " + host + ":" + port);
