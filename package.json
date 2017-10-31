@@ -1,0 +1,28 @@
+{
+  "name": "coa2",
+  "version": "1.0.0",
+  "description": "Now is the time for COA2",
+  "main": "example-resource.js",
+  "dependencies": {
+    "@types/express": "^4.0.39",
+    "@types/mkdirp": "^0.5.1",
+    "@types/npm": "^2.0.29",
+    "@types/restify": "^5.0.5",
+    "closure-library.ts": "^1.0.0",
+    "express": "^4.16.2",
+    "mkdirp": "^0.5.1",
+    "rest-services": "^0.1.16",
+    "restify": "^6.2.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://fpinn@stash.touchcommerce.com/scm/rt/rt.git"
+  },
+  "author": "Fred",
+  "license": "ISC"
+}
