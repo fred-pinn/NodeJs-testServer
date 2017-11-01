@@ -10,6 +10,7 @@ const Action_1 = require("./Action");
 const HtmlRender_1 = require("./HtmlRender");
 const ObjectAssign = require("object-assign");
 const mongodb = require("mongodb");
+console.log("SERVER started");
 console.log("NOTICE: Version: " + process.version);
 Object.assign = ObjectAssign;
 let mongoURL = process.env.OPENSHIFT_MONGODB_DB_URL || process.env.MONGO_URL;

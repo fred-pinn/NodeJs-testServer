@@ -12,7 +12,7 @@ import * as morgan from "morgan";
 import * as ObjectAssign from "object-assign";
 import * as mongodb from "mongodb";
 
-
+console.log("SERVER started");
 console.log("NOTICE: Version: "+ process.version);
 Object.assign = ObjectAssign;
 let mongoURL = process.env.OPENSHIFT_MONGODB_DB_URL || process.env.MONGO_URL;
