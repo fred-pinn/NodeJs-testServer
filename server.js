@@ -57,8 +57,14 @@ var port = parseInt((process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || '8
 var hostName = process.env.IP || process.env.OPENSHIFT_NODEJS_IP || process.env.COMPUTERNAME + "." + process.env.USERDNSDOMAIN || '0.0.0.0';
 //let mkdirp = require(mkdirp);
 mkdirp("./Public/Images/", function (err) {
-    fs.copyFileSync("./android.js", "./Public/android.js");
-    fs.copyFileSync("./android.css", "./Public/android.css");
+    let filesys = fs;
+    if (filesys == null) {
+        console.log("WARNING: fs is null");
+        filesys = require("fs");
+    }
+    console.log("WARNING: fs is still null");
+    filesys.copyFileSync("./android.js", "./Public/android.js");
+    filesys.copyFileSync("./android.css", "./Public/android.css");
     app.use(bodyParser.json({ limit: '55mb' }));
     app.post("/activity", urlEncodedParser, function (req, res) {
         console.log("Activity");
@@ -69,12 +75,12 @@ mkdirp("./Public/Images/", function (err) {
         //  console.log("Dump:\n" +dump);
         // let fs = require("fs");
         let html = htmlRender.createDocument(dataJson);
-        fs.writeFile("./Public/Activity.html", html, "utf8", function (err) {
+        filesys.writeFile("./Public/Activity.html", html, "utf8", function (err) {
             if (err != null) {
                 console.error("Could not write Activity.html file: " + err);
             }
         });
-        fs.writeFile("./Public/Activity.json", dump, "utf8", function (err) {
+        filesys.writeFile("./Public/Activity.json", dump, "utf8", function (err) {
             if (err != null) {
                 console.error("Could not write Activity.json file: " + err);
             }
