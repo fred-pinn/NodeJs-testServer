@@ -10,6 +10,7 @@ const Action_1 = require("./Action");
 const HtmlRender_1 = require("./HtmlRender");
 const ObjectAssign = require("object-assign");
 const mongodb = require("mongodb");
+console.log("NOTICE: Version: " + process.version);
 Object.assign = ObjectAssign;
 let mongoURL = process.env.OPENSHIFT_MONGODB_DB_URL || process.env.MONGO_URL;
 let mongoURLLabel = "";
@@ -62,7 +63,8 @@ mkdirp("./Public/Images/", function (err) {
         console.log("WARNING: fs is null");
         filesys = require("fs");
     }
-    console.log("WARNING: fs is still null");
+    if (filesys == null)
+        console.log("WARNING: fs is still null");
     filesys.copyFileSync("./android.js", "./Public/android.js");
     filesys.copyFileSync("./android.css", "./Public/android.css");
     app.use(bodyParser.json({ limit: '55mb' }));
