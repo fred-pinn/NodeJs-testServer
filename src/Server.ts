@@ -7,8 +7,68 @@ import * as mkdirp from "mkdirp";
 import View from "./View";
 import Action from "./Action";
 import HtmlRender from "./HtmlRender";
+/* THe following import is for testing only */
+import * as morgan from "morgan";
+import * as ObjectAssign from "object-assign";
+import * as mongodb from "mongodb";
+
+Object.assign = ObjectAssign;
+let mongoURL = process.env.OPENSHIFT_MONGODB_DB_URL || process.env.MONGO_URL;
+let mongoURLLabel = "";
+if (mongoURL == null && process.env.DATABASE_SERVICE_NAME) {
+  let mongoServiceName:string = process.env.DATABASE_SERVICE_NAME.toUpperCase();
+  let mongoHost = process.env[mongoServiceName + '_SERVICE_HOST'],
+      mongoPort = process.env[mongoServiceName + '_SERVICE_PORT'],
+      mongoDatabase = process.env[mongoServiceName + '_DATABASE'],
+      mongoPassword = process.env[mongoServiceName + '_PASSWORD'];
+  let mongoUser:string = process.env[mongoServiceName + '_USER'];
+
+  if (mongoHost && mongoPort && mongoDatabase) {
+    mongoURLLabel = mongoURL = 'mongodb://';
+    if (mongoUser && mongoPassword) {
+      mongoURL += mongoUser + ':' + mongoPassword + '@';
+    }
+    // Provide UI label that excludes user id and pw
+    mongoURLLabel += mongoHost + ':' + mongoPort + '/' + mongoDatabase;
+    mongoURL += mongoHost + ':' +  mongoPort + '/' + mongoDatabase;
+
+  }
+}
+
+class DbDetails {
+  databaseName:string;
+  url:string;
+  type:string;
+}
+
+var db:mongodb.Db= null,
+dbDetails = new DbDetails();
+let initDb:Function = function(callback) {
+
+  if (mongoURL == null) return;
+
+  if (mongodb == null) return;
+
+  mongodb.connect(mongoURL, function(err, conn:mongodb.Db) {
+    if (err) {
+      callback(err);
+      return;
+    }
+
+    db = conn;
+    dbDetails.databaseName = db.databaseName;
+    dbDetails.url = mongoURLLabel;
+    dbDetails.type = 'MongoDB';
+
+    console.log('Connected to MongoDB at: %s', mongoURL);
+  });
+};
+
+
 
 let pendingActions:Array<Action> = [];
+
+
 
 //import ExampleResource from 'example-resource'
 let noPadding:boolean = false;
@@ -61,6 +121,50 @@ mkdirp("./Public/Images/", function(err){
     res.end(JSON.stringify( newJson ));
     
   });
+
+  /* Begin - from original */
+  app.get('/', function (req, res) {
+    // try to initialize the db on every request if it's not already
+    // initialized.
+    if (!db) {
+      initDb(function(err){});
+    }
+    if (db) {
+      var col = db.collection('counts');
+      // Create a document with request IP and current time of request
+      col.insert({ip: req.ip, date: Date.now()});
+      col.count(function(err, count){
+        res.render('index.html', { pageCountMessage : count, dbInfo: dbDetails });
+      });
+    } else {
+      res.render('index.html', { pageCountMessage : null});
+    }
+  });
+
+  app.get('/pagecount', function (req, res) {
+    // try to initialize the db on every request if it's not already
+    // initialized.
+    if (!db) {
+      initDb(function(err){});
+    }
+    if (db) {
+      db.collection('counts').count(function(err, count ){
+        res.send('{ pageCount: ' + count + '}');
+      });
+    } else {
+      res.send('{ pageCount: -1 }');
+    }
+  });
+  // error handling
+app.use(function(err, req, res, next){
+  console.error(err.stack);
+  res.status(500).send('Something bad happened!');
+});
+
+initDb(function(err){
+  console.log('Error connecting to Mongo. Message:\n'+err);
+});
+  /* End - from original */
   
   app.get("/clickView", function (req, res) {
     //let val:string = req.param("id");
