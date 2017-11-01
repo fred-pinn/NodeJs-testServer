@@ -1,75 +1,49 @@
-apiVersion: v1
 kind: DeploymentConfig
+apiVersion: apps.openshift.io/v1
 metadata:
+  name: {{ .Values.name | quote }}
   annotations:
-    openshift.io/generated-by: OpenShiftWebConsole
-  creationTimestamp: '2017-10-30T22:07:05Z'
-  generation: 1
-  labels:
-    app: cobrowse-poc
-  name: cobrowse-poc
-  namespace: androidrest
-  resourceVersion: '1714543762'
-  selfLink: /oapi/v1/namespaces/androidrest/deploymentconfigs/cobrowse-poc
-  uid: aa37460a-bdbe-11e7-83c8-122631632f42
+    description: Defines how to deploy the application server
+    template.alpha.openshift.io/wait-for-ready: 'true'
 spec:
+  strategy:
+    type: Rolling
+  triggers:
+  - type: ImageChange
+    imageChangeParams:
+      automatic: true
+      containerNames:
+      - nodejs-example
+      from:
+        kind: ImageStreamTag
+        name: {{ print .Values.name ":latest" | quote }}
+  - type: ConfigChange
   replicas: 1
   selector:
-    deploymentconfig: cobrowse-poc
-  strategy:
-    activeDeadlineSeconds: 21600
-    resources: {}
-    rollingParams:
-      intervalSeconds: 1
-      maxSurge: 25%
-      maxUnavailable: 25%
-      timeoutSeconds: 600
-      updatePeriodSeconds: 1
-    type: Rolling
+    name: {{ .Values.name | quote }}
   template:
     metadata:
-      creationTimestamp: null
+      name: {{ .Values.name | quote }}
       labels:
-        app: cobrowse-poc
-        deploymentconfig: cobrowse-poc
+        name: {{ .Values.name | quote }}
     spec:
       containers:
-        - image: 'cobrowse-poc:latest'
-          imagePullPolicy: Always
-          name: cobrowse-poc
-          ports:
-            - containerPort: 8181
-              protocol: TCP
-          resources: {}
-          terminationMessagePath: /dev/termination-log
-          terminationMessagePolicy: File
-      dnsPolicy: ClusterFirst
-      restartPolicy: Always
-      schedulerName: default-scheduler
-      securityContext: {}
-      terminationGracePeriodSeconds: 30
-  test: false
-  triggers:
-    - imageChangeParams:
-        automatic: true
-        containerNames:
-          - cobrowse-poc
-        from:
-          kind: ImageStreamTag
-          name: 'cobrowse-poc:latest'
-          namespace: androidrest
-      type: ImageChange
-    - type: ConfigChange
-status:
-  availableReplicas: 0
-  conditions:
-    - lastTransitionTime: '2017-10-30T22:07:05Z'
-      lastUpdateTime: '2017-10-30T22:07:05Z'
-      message: Deployment config does not have minimum availability.
-      status: 'False'
-      type: Available
-  latestVersion: 0
-  observedGeneration: 1
-  replicas: 0
-  unavailableReplicas: 0
-  updatedReplicas: 0
+      - name: nodejs-example
+        image: " "
+        ports:
+        - containerPort: 8080
+        readinessProbe:
+          timeoutSeconds: 3
+          initialDelaySeconds: 3
+          httpGet:
+            path: "/"
+            port: 8080
+        livenessProbe:
+          timeoutSeconds: 3
+          initialDelaySeconds: 30
+          httpGet:
+            path: "/"
+            port: 8080
+        resources:
+          limits:
+            memory: {{ .Values.memory_limit | quote }}

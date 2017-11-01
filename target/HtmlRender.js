@@ -1,26 +1,24 @@
 "use strict";
-exports.__esModule = true;
-var fs = require("fs");
-var pendingActions = [];
+Object.defineProperty(exports, "__esModule", { value: true });
+const fs = require("fs");
+let pendingActions = [];
 //import ExampleResource from 'example-resource'
-var noPadding = false;
-var CENTER_HORIZONTAL = 0x00000001; //Place object in the horizontal center of its container, not changing its size.
-var CENTER_VERTICAL = 0x00000010; //Place object in the vertical center of its container, not changing its size.
-var RELATIVE_LAYOUT_DIRECTION = 0x00800000;
-var CENTER = CENTER_HORIZONTAL | CENTER_VERTICAL;
-var LEFT = 0x00000003;
-var TOP = 0x00000030;
-var LEFT_TOP = LEFT | TOP;
-var TOP_LEFT = LEFT | TOP | RELATIVE_LAYOUT_DIRECTION;
-var FOO = 0x00800033;
-var HtmlRender = /** @class */ (function () {
-    function HtmlRender() {
-    }
-    HtmlRender.prototype.getNeededComponents = function (view, pieces) {
+let noPadding = false;
+const CENTER_HORIZONTAL = 0x00000001; //Place object in the horizontal center of its container, not changing its size.
+const CENTER_VERTICAL = 0x00000010; //Place object in the vertical center of its container, not changing its size.
+const RELATIVE_LAYOUT_DIRECTION = 0x00800000;
+const CENTER = CENTER_HORIZONTAL | CENTER_VERTICAL;
+const LEFT = 0x00000003;
+const TOP = 0x00000030;
+const LEFT_TOP = LEFT | TOP;
+const TOP_LEFT = LEFT | TOP | RELATIVE_LAYOUT_DIRECTION;
+const FOO = 0x00800033;
+class HtmlRender {
+    constructor() { }
+    getNeededComponents(view, pieces) {
         if (pieces == null)
             pieces = [];
-        for (var _i = 0, _a = view.children; _i < _a.length; _i++) {
-            var child = _a[_i];
+        for (let child of view.children) {
             this.getNeededComponents(child, pieces);
         }
         if (!this.doesImageExist(view)) {
@@ -28,17 +26,17 @@ var HtmlRender = /** @class */ (function () {
             pieces.push(view.name);
         }
         return pieces;
-    };
-    HtmlRender.prototype.doesImageExist = function (view) {
+    }
+    doesImageExist(view) {
         if (view.hasPreview) {
-            var crc = view.crc.toString(16);
-            var imageFileName = "./Public/Images/" + view.name + "." + crc + ".PNG";
+            let crc = view.crc.toString(16);
+            let imageFileName = "./Public/Images/" + view.name + "." + crc + ".PNG";
             return fs.existsSync(imageFileName);
         }
         return true;
-    };
-    HtmlRender.prototype.createDocument = function (dataJson) {
-        var html = "<!DOCTYPE HTML>\n<html><head>" +
+    }
+    createDocument(dataJson) {
+        let html = "<!DOCTYPE HTML>\n<html><head>" +
             "<style>\n" +
             "span.SanSerif {position:absolute;left:0;right:-2px;top:0;bottom:0;display:none;zoom:99%}" +
             "span {position:absolute;left:0;right:-2px;top:0;bottom:0;display:none;}" +
@@ -53,19 +51,19 @@ var HtmlRender = /** @class */ (function () {
             "</head><body>" +
             this.formatIntoHtml(dataJson) + "</body></html>";
         return html;
-    };
-    HtmlRender.prototype.formatColor = function (color, _default) {
+    }
+    formatColor(color, _default) {
         if (color !== 0 && color) {
-            var fixedColor = (0x00FFFFFF & color) | 0x10000000;
-            var colorSelection = fixedColor.toString(16);
+            let fixedColor = (0x00FFFFFF & color) | 0x10000000;
+            let colorSelection = fixedColor.toString(16);
             colorSelection = "#" + (colorSelection.substr(colorSelection.length - 6));
             //  console.log("colorSelection: "+colorSelection);
             return colorSelection;
         }
         return _default;
-    };
-    HtmlRender.prototype.formatGravity = function (gravity) {
-        var css = "";
+    }
+    formatGravity(gravity) {
+        let css = "";
         switch (gravity) {
             case TOP_LEFT:
                 css = "justify-content: left; align-items: top; ";
@@ -99,34 +97,34 @@ var HtmlRender = /** @class */ (function () {
                 css = "";
         }
         return css;
-    };
-    HtmlRender.prototype.formatIntoHtml = function (view) {
-        var html = "\n\n";
+    }
+    formatIntoHtml(view) {
+        let html = "\n\n";
         try {
-            var displayState = (view.visibility == 0) ? "block" : "none";
-            var tagName = (view.isButton) ? "BUTTON" : "DIV";
-            var hasPreview = view.hasPreview;
-            var id = view.id;
-            var crcPrefix = (view.crc) ? "." + (view.crc.toString(16)) : "";
-            var image = "<DIV style='position:absolute;top:0;bottom:0;right:0;left:0;display:flex;justify-content: center; align-items: center;'>" +
+            let displayState = (view.visibility == 0) ? "block" : "none";
+            let tagName = (view.isButton) ? "BUTTON" : "DIV";
+            let hasPreview = view.hasPreview;
+            let id = view.id;
+            let crcPrefix = (view.crc) ? "." + (view.crc.toString(16)) : "";
+            let image = "<DIV style='position:absolute;top:0;bottom:0;right:0;left:0;display:flex;justify-content: center; align-items: center;'>" +
                 "<IMG id='IMG_" + id + "' style='display:flex;justify-content: center; align-items: center;' src='Images/" + view.name + crcPrefix + ".PNG'>" +
                 "</DIV>";
-            var children = view.children;
-            var childrenHtml = "";
-            var colorSelection = "";
-            var backgroundColorStyle = "";
-            var backgroundOpacityStyle = "";
-            var toolTip = view.className;
-            var text = "";
-            var textFormatting = "";
-            var textColor = this.formatColor(view.textColor, "black");
+            let children = view.children;
+            let childrenHtml = "";
+            let colorSelection = "";
+            let backgroundColorStyle = "";
+            let backgroundOpacityStyle = "";
+            let toolTip = view.className;
+            let text = "";
+            let textFormatting = "";
+            let textColor = this.formatColor(view.textColor, "black");
             if (view.color !== 0 && view.color) {
-                var fixedColor = (0x00FFFFFF & view.color) | 0x10000000;
+                let fixedColor = (0x00FFFFFF & view.color) | 0x10000000;
                 colorSelection = fixedColor.toString(16);
                 colorSelection = "#" + (colorSelection.substr(colorSelection.length - 6));
                 backgroundColorStyle = "background-color: #" + (colorSelection.substr(colorSelection.length - 6)) + ";";
                 //    console.log("colorSelection: "+colorSelection);
-                var opacity = (((view.color >> 24) & 0x00FF) / 0x00FF);
+                let opacity = (((view.color >> 24) & 0x00FF) / 0x00FF);
                 if (opacity < 1.0) {
                     //  backgroundOpacityStyle = "opacity:"+opacity+";";
                 }
@@ -174,7 +172,7 @@ var HtmlRender = /** @class */ (function () {
                 text = "<span style='display:flex;position:absolute;top:0;left:0;bottom:0;right:0;justify-content:inherit;align-items:inherit;'>" + view.text + "</span>";
                 if (view.typefaceName != null)
                     textFormatting += "fontFamily: " + view.typefaceName + ";";
-                var fontFamily = "sans-serif";
+                let fontFamily = "sans-serif";
                 switch (view.typefaceName) {
                     default:
                     case "DEFAULT":
@@ -200,7 +198,7 @@ var HtmlRender = /** @class */ (function () {
                     textFormatting += "font-style:italic;";
                 }
             }
-            var padding = "";
+            let padding = "";
             if (view.paddingTop != null)
                 padding += "padding-top:" + view.paddingTop + "px;";
             if (view.paddingLeft != null)
@@ -215,8 +213,8 @@ var HtmlRender = /** @class */ (function () {
                 padding += "margin-bottom:" + ((view.marginBottom == null) ? 0 : view.marginBottom) + "px;";
                 padding += "margin-right:" + ((view.marginRight == null) ? 0 : view.marginRight) + "px;";
             }
-            var styles = padding;
-            var decoration = "";
+            let styles = padding;
+            let decoration = "";
             if (view.allCaps)
                 decoration += "text-transform: uppercase;";
             styles += decoration;
@@ -224,8 +222,7 @@ var HtmlRender = /** @class */ (function () {
                 styles += this.formatGravity(view.gravity);
             if (view.singleLine)
                 styles += "white-space: nowrap;";
-            for (var _i = 0, children_1 = children; _i < children_1.length; _i++) {
-                var child = children_1[_i];
+            for (let child of children) {
                 childrenHtml += this.formatIntoHtml(child);
             }
             html = "\n" +
@@ -255,7 +252,7 @@ var HtmlRender = /** @class */ (function () {
             console.error("ERROR: creating html: ", e);
         }
         return html;
-    };
-    return HtmlRender;
-}());
-exports["default"] = HtmlRender;
+    }
+}
+exports.default = HtmlRender;
+//# sourceMappingURL=HtmlRender.js.map
