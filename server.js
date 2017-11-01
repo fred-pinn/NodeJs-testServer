@@ -66,8 +66,16 @@ mkdirp("./Public/Images/", function (err) {
     }
     if (filesys == null)
         console.log("WARNING: fs is still null");
-    filesys.copyFileSync("./android.js", "./Public/android.js");
-    filesys.copyFileSync("./android.css", "./Public/android.css");
+    filesys.copyFile("./android.js", "./Public/android.js", function (err) {
+        if (err) {
+            console.error("ERROR: could not open file");
+        }
+    });
+    filesys.copyFile("./android.css", "./Public/android.css", function (err) {
+        if (err) {
+            console.error("ERROR: could not open file");
+        }
+    });
     app.use(bodyParser.json({ limit: '55mb' }));
     app.post("/activity", urlEncodedParser, function (req, res) {
         console.log("Activity");
