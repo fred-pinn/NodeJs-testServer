@@ -60,12 +60,6 @@ var hostName = process.env.IP || process.env.OPENSHIFT_NODEJS_IP || process.env.
 //let mkdirp = require(mkdirp);
 mkdirp("./Public/Images/", function (err) {
     let filesys = fs;
-    if (filesys == null) {
-        console.log("WARNING: fs is null");
-        filesys = require("fs");
-    }
-    if (filesys == null)
-        console.log("WARNING: fs is still null");
     filesys.copyFile("./android.js", "./Public/android.js", function (err) {
         if (err) {
             console.error("ERROR: could not open file");

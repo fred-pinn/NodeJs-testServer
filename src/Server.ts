@@ -83,13 +83,17 @@ var hostName:string   = process.env.IP   || process.env.OPENSHIFT_NODEJS_IP || p
 
 mkdirp("./Public/Images/", function(err){
   let filesys = fs;
-  if (filesys == null) {
-    console.log("WARNING: fs is null");
-    filesys = require("fs");
-  }
-  if (filesys == null)   console.log("WARNING: fs is still null");
-  filesys.copyFileSync("./android.js", "./Public/android.js");
-  filesys.copyFileSync("./android.css", "./Public/android.css");
+
+  filesys.copyFile("./android.js", "./Public/android.js",function(err) {
+    if (err) {
+      console.error("ERROR: could not open file");
+    }
+  });
+  filesys.copyFile("./android.css", "./Public/android.css",function(err) {
+    if (err) {
+      console.error("ERROR: could not open file");
+    }
+  });
   app.use(bodyParser.json({limit:'55mb'}));
   
   app.post("/activity", urlEncodedParser, function (req, res) {
