@@ -11,6 +11,7 @@ import HtmlRender from "./HtmlRender";
 import * as morgan from "morgan";
 import * as ObjectAssign from "object-assign";
 import * as mongodb from "mongodb";
+import * as copyFile from "fs-copy-file";
 
 console.log("SERVER started");
 console.log("NOTICE: Version: "+ process.version);
@@ -84,12 +85,12 @@ var hostName:string   = process.env.IP   || process.env.OPENSHIFT_NODEJS_IP || p
 mkdirp("./Public/Images/", function(err){
   let filesys = fs;
 
-  filesys.copyFile("./android.js", "./Public/android.js",function(err) {
+  copyFile("./android.js", "./Public/android.js",function(err) {
     if (err) {
       console.error("ERROR: could not open file");
     }
   });
-  filesys.copyFile("./android.css", "./Public/android.css",function(err) {
+ copyFile("./android.css", "./Public/android.css",function(err) {
     if (err) {
       console.error("ERROR: could not open file");
     }

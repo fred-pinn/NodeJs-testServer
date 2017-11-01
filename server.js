@@ -10,6 +10,7 @@ const Action_1 = require("./Action");
 const HtmlRender_1 = require("./HtmlRender");
 const ObjectAssign = require("object-assign");
 const mongodb = require("mongodb");
+const copyFile = require("fs-copy-file");
 console.log("SERVER started");
 console.log("NOTICE: Version: " + process.version);
 Object.assign = ObjectAssign;
@@ -60,12 +61,12 @@ var hostName = process.env.IP || process.env.OPENSHIFT_NODEJS_IP || process.env.
 //let mkdirp = require(mkdirp);
 mkdirp("./Public/Images/", function (err) {
     let filesys = fs;
-    fs.copyFile("./android.js", "./Public/android.js", function (err) {
+    copyFile("./android.js", "./Public/android.js", function (err) {
         if (err) {
             console.error("ERROR: could not open file");
         }
     });
-    fs.copyFile("./android.css", "./Public/android.css", function (err) {
+    copyFile("./android.css", "./Public/android.css", function (err) {
         if (err) {
             console.error("ERROR: could not open file");
         }
