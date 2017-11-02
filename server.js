@@ -57,7 +57,8 @@ let htmlRender = new HtmlRender_1.default();
 let app = express();
 let urlEncodedParser = bodyParser.urlencoded({ limit: '100mb', extended: false });
 var port = parseInt((process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || '8181'));
-var hostName = process.env.IP || process.env.OPENSHIFT_NODEJS_IP || process.env.COMPUTERNAME + "." + process.env.USERDNSDOMAIN || '0.0.0.0';
+let hostNameForWindows = (process.env.COMPUTERNAME && process.env.USERDNSDOMAIN) ? (process.env.COMPUTERNAME + "." + process.env.USERDNSDOMAIN) : null;
+var hostName = process.env.IP || process.env.OPENSHIFT_NODEJS_IP || hostNameForWindows || '0.0.0.0';
 //let mkdirp = require(mkdirp);
 mkdirp("./Public/Images/", function (err) {
     let filesys = fs;
@@ -187,6 +188,7 @@ mkdirp("./Public/Images/", function (err) {
         console.log("viewImage");
         res.end(JSON.stringify({ "status": "OK" }));
     });
+    console.log("host: " + hostName);
     let server = app.listen(port, hostName, function () {
         let host = server.address().address;
         let port = server.address().port;
