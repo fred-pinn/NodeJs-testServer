@@ -10,6 +10,7 @@
     "@types/object-assign": "^4.0.30",
     "chai": "^3.5.0",
     "chai-http": "^2.0.1",
+    "consolidate": "^0.15.0",
     "ejs": "^2.4.1",
     "express": "^4.13.4",
     "fs-copy-file": "^1.0.2",
@@ -18,7 +19,8 @@
     "mocha": "^2.4.5",
     "mongodb": "^2.2.33",
     "morgan": "^1.7.0",
-    "object-assign": "^4.1.0"
+    "object-assign": "^4.1.0",
+    "swig": "^1.4.2"
   },
   "engine": {
     "node": "*",

@@ -8,7 +8,9 @@ import * as http from "http";
 import View from "./View";
 import Action from "./Action";
 import HtmlRender from "./HtmlRender";
-import * as html from "html";
+import * as consolidate from "consolidate";
+import * as ejs from "ejs";
+
 /* THe following import is for testing only */
 import * as morgan from "morgan";
 import * as ObjectAssign from "object-assign";
@@ -53,18 +55,27 @@ var db:mongodb.Db= null,
 dbDetails = new DbDetails();
 let initDb:Function = function(callback) {
 
-  if (mongoURL == null) return;
+  if (mongoURL == null) {
+    console.log("WARNING: No mongoURL defined");
+    return;
+  } 
 
-  if (mongodb == null) return;
+  if (mongodb == null) {
+    console.log("WARNING: No mongodb defined");
+    return;
+  } 
 
-  mongodb.connect(mongoURL, function(err, conn:mongodb.Db) {
-    if (err) {
-      callback(err);
+  mongodb.connect(mongoURL, function(error:mongodb.MongoError, result:mongodb.Db) {
+    if (error) {
+      console.log("ERROR: "+error.message);
+  //    console.error("ERROR: Cannot connect to Mongo: "+err);
+      callback(error);
+
       return;
     }
 
-    db = conn;
-    dbDetails.databaseName = db.databaseName;
+    db = result;
+    dbDetails.databaseName = result.databaseName;
     dbDetails.url = mongoURLLabel;
     dbDetails.type = 'MongoDB';
 
@@ -101,6 +112,8 @@ mkdirp(myDirectory + "/Public/Images/", function(err){
   copyFile(myDirectory + "/index.html", myDirectory + "/Public/index.html",function(err) {
     if (err) {
       console.error("ERROR: could not open file");
+    } else {
+      console.log("NOTICE: copied: " + myDirectory + "/Public/index.html");
     }
   });
   copyFile(myDirectory + "/android.js", myDirectory + "/Public/android.js",function(err) {
@@ -113,6 +126,10 @@ mkdirp(myDirectory + "/Public/Images/", function(err){
       console.error("ERROR: could not open file");
     }
   });
+
+  app.engine('html',ejs.renderFile);
+  app.set("views", myDirectory);
+  app.set("view engine", "html");
   app.use(bodyParser.json({limit:'55mb'}));
   
   app.post("/activity", urlEncodedParser, function (req, res) {
@@ -170,9 +187,18 @@ mkdirp(myDirectory + "/Public/Images/", function(err){
         res.render('index.html', { pageCountMessage : count, dbInfo: dbDetails });
       });
     } else {
-      console.log("no database");
       try {
-        res.render('index.html', { pageCountMessage : null});
+        let _dbinfo = new DbDetails();
+        _dbinfo.databaseName = "foo";
+        _dbinfo.url="http://what.the.heck.com/";
+        _dbinfo.type="foobar";
+
+        res.render('index.html', { pageCountMessage : 1234, dbInfo: _dbinfo } , function(err, html){
+           if (err) console.log("err: "+err);
+           if (html) {
+             res.send(html);
+           }
+        });
         console.log("render the html successful");
       } catch(e) {
         console.log("render the html FAILED, reason: "+e);
@@ -290,6 +316,7 @@ initDb(function(err){
   console.error("FATAL: Could not listen on: "+hostName+":"+port + ", Reason"+ee,ee);
 }
   
-  app.use(express.static("Public"));
+ // app.set('view-engine', 'html');
+  app.use(express.static(myDirectory + "/Public"));
 });
 
