@@ -85,7 +85,7 @@ var hostName:string   = process.env.IP   || process.env.OPENSHIFT_NODEJS_IP || h
 var env:string;
 var envs:any = process.env;
 for (env in envs) {
-  console.log("ENV: "+env);
+  console.log("ENV: "+env + ": " +envs[env]);
 }
 //let mkdirp = require(mkdirp);
 

@@ -62,7 +62,7 @@ var hostName = process.env.IP || process.env.OPENSHIFT_NODEJS_IP || hostNameForW
 var env;
 var envs = process.env;
 for (env in envs) {
-    console.log("ENV: " + env);
+    console.log("ENV: " + env + ": " + envs[env]);
 }
 //let mkdirp = require(mkdirp);
 mkdirp("./Public/Images/", function (err) {
