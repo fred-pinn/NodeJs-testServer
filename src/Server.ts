@@ -4,6 +4,7 @@ import * as express from "express";
 import * as bodyParser from "body-parser";
 import * as fs from "fs";
 import * as mkdirp from "mkdirp";
+import * as http from "http";
 import View from "./View";
 import Action from "./Action";
 import HtmlRender from "./HtmlRender";
@@ -256,11 +257,12 @@ initDb(function(err){
   
   console.log("host: "+ hostName);
   console.log("port: "+ port);
+  hostName = "0.0.0.0";
   //NODEJS_TESTSERVER_PORT
   //NODEJS_TESTSERVER_SERVICE_PORT
-  let server;
+  let server:http.Server;
   try {
-  server = app.listen(port /*, hostName*/, function(){
+  server = app.listen(port , hostName, function(err){
     let host = server.address().address;
     let port = server.address().port;
   

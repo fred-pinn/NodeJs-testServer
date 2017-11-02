@@ -196,11 +196,12 @@ mkdirp("./Public/Images/", function (err) {
     });
     console.log("host: " + hostName);
     console.log("port: " + port);
+    hostName = "0.0.0.0";
     //NODEJS_TESTSERVER_PORT
     //NODEJS_TESTSERVER_SERVICE_PORT
     let server;
     try {
-        server = app.listen(port /*, hostName*/, function () {
+        server = app.listen(port, hostName, function (err) {
             let host = server.address().address;
             let port = server.address().port;
             console.info(`==> Listening: ` + host + ":" + port);
