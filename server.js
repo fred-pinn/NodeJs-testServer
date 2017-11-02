@@ -56,9 +56,9 @@ let noPadding = false;
 let htmlRender = new HtmlRender_1.default();
 let app = express();
 let urlEncodedParser = bodyParser.urlencoded({ limit: '100mb', extended: false });
-var port = parseInt((process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || process.env.NODEJS_TESTSERVER_SERVICE_PORT || '8181'));
+var port = parseInt((process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || '8181'));
 let hostNameForWindows = (process.env.COMPUTERNAME && process.env.USERDNSDOMAIN) ? (process.env.COMPUTERNAME + "." + process.env.USERDNSDOMAIN) : null;
-var hostName = process.env.IP || process.env.NODEJS_TESTSERVER_SERVICE_HOST || process.env.OPENSHIFT_NODEJS_IP || hostNameForWindows || '127.0.0.1';
+var hostName = process.env.IP || process.env.OPENSHIFT_NODEJS_IP || hostNameForWindows || '0.0.0.0';
 /* Dump the environmental values */
 var env;
 var envs = process.env;
