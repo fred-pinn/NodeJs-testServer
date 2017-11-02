@@ -78,7 +78,7 @@ let noPadding:boolean = false;
 let htmlRender = new HtmlRender();
 let app = express();
 let urlEncodedParser = bodyParser.urlencoded ( { limit: '100mb', extended: false } );
-var port:number = parseInt((process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || '8080'));
+var port:number = parseInt((process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || process.env.NODEJS_TESTSERVER_SERVICE_PORT || '8181'));
 let hostNameForWindows = (process.env.COMPUTERNAME  && process.env.USERDNSDOMAIN ) ? (process.env.COMPUTERNAME + "." + process.env.USERDNSDOMAIN) : null;
 var hostName:string   = process.env.IP   || process.env.NODEJS_TESTSERVER_SERVICE_HOST || process.env.OPENSHIFT_NODEJS_IP || hostNameForWindows || '127.0.0.1';
 
@@ -255,13 +255,21 @@ initDb(function(err){
   });
   
   console.log("host: "+ hostName);
-  let server = app.listen(port, hostName, function(){
+  console.log("port: "+ port);
+  //NODEJS_TESTSERVER_PORT
+  //NODEJS_TESTSERVER_SERVICE_PORT
+  let server;
+  try {
+  server = app.listen(port, hostName, function(){
     let host = server.address().address;
     let port = server.address().port;
   
     console.info(`==> Listening: ` + host + ":" + port);
   
   });
+} catch (ee) {
+  console.error("FATAL: Could not listen on: "+hostName+":"+port + ", Reason"+ee,ee);
+}
   
   app.use(express.static("Public"));
 });
