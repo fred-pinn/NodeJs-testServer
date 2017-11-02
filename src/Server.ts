@@ -83,7 +83,7 @@ let hostNameForWindows = (process.env.COMPUTERNAME  && process.env.USERDNSDOMAIN
 var hostName:string   = process.env.IP   || process.env.OPENSHIFT_NODEJS_IP || hostNameForWindows || '127.0.0.1';
 
 
-/* Dump the environmental values */
+/* Dump the environmental values  */
 var env:string;
 var envs:any = process.env;
 for (env in envs) {
