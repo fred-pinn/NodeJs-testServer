@@ -105,8 +105,10 @@ mkdirp(myDirectory + "/Public/Images/", function (err) {
     app.get('/healthz', function (req, res, next) {
         // check my health
         // -> return next(new Error('DB is unreachable'))
+        console.log("I am healthy");
         res.sendStatus(200);
     });
+    console.log("Added /healthz");
     app.post("/activity", urlEncodedParser, function (req, res) {
         console.log("Activity");
         let data = req.body.data;
