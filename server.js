@@ -50,7 +50,7 @@ let initDb = function (callback) {
         console.log('Connected to MongoDB at: %s', mongoURL);
     });
 };
-let pendingActions = [];
+let pendingActions = new Array();
 //import ExampleResource from 'example-resource'
 let noPadding = false;
 let htmlRender = new HtmlRender_1.default();

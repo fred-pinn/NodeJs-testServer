@@ -69,7 +69,7 @@ let initDb:Function = function(callback) {
 
 
 
-let pendingActions:Array<Action> = [];
+let pendingActions:Array<Action> = new Array<Action>();
 
 
 
