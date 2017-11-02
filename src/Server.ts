@@ -8,11 +8,15 @@ import * as http from "http";
 import View from "./View";
 import Action from "./Action";
 import HtmlRender from "./HtmlRender";
+import * as html from "html";
 /* THe following import is for testing only */
 import * as morgan from "morgan";
 import * as ObjectAssign from "object-assign";
 import * as mongodb from "mongodb";
 import * as copyFile from "fs-copy-file";
+
+let myDirectory:string = process.cwd();
+console.log("My directory is: "+myDirectory);
 
 console.log("SERVER started");
 console.log("NOTICE: Version: "+ process.version);
@@ -92,10 +96,14 @@ for (env in envs) {
 }
 //let mkdirp = require(mkdirp);
 
-mkdirp("./Public/Images/", function(err){
+mkdirp(myDirectory + "/Public/Images/", function(err){
   let filesys = fs;
-
-  copyFile("./android.js", "./Public/android.js",function(err) {
+  copyFile(myDirectory + "/index.html", myDirectory + "/Public/index.html",function(err) {
+    if (err) {
+      console.error("ERROR: could not open file");
+    }
+  });
+  copyFile(myDirectory + "/android.js", myDirectory + "/Public/android.js",function(err) {
     if (err) {
       console.error("ERROR: could not open file");
     }
@@ -147,8 +155,10 @@ mkdirp("./Public/Images/", function(err){
 
   /* Begin - from original */
   app.get('/', function (req, res) {
+
     // try to initialize the db on every request if it's not already
     // initialized.
+    console.log("app.get shlash");
     if (!db) {
       initDb(function(err){});
     }
@@ -160,7 +170,14 @@ mkdirp("./Public/Images/", function(err){
         res.render('index.html', { pageCountMessage : count, dbInfo: dbDetails });
       });
     } else {
-      res.render('index.html', { pageCountMessage : null});
+      console.log("no database");
+      try {
+        res.render('index.html', { pageCountMessage : null});
+        console.log("render the html successful");
+      } catch(e) {
+        console.log("render the html FAILED, reason: "+e);
+        res.sendFile(myDirectory+'/index.html');
+      }
     }
   });
 
