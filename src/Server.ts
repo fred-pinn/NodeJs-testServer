@@ -260,7 +260,7 @@ initDb(function(err){
   //NODEJS_TESTSERVER_SERVICE_PORT
   let server;
   try {
-  server = app.listen(port, hostName, function(){
+  server = app.listen(port /*, hostName*/, function(){
     let host = server.address().address;
     let port = server.address().port;
   
