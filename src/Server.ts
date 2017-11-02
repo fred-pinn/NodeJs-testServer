@@ -78,9 +78,15 @@ let noPadding:boolean = false;
 let htmlRender = new HtmlRender();
 let app = express();
 let urlEncodedParser = bodyParser.urlencoded ( { limit: '100mb', extended: false } );
-var port:number = parseInt((process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || '8181'));
+var port:number = parseInt((process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || '8080'));
 let hostNameForWindows = (process.env.COMPUTERNAME  && process.env.USERDNSDOMAIN ) ? (process.env.COMPUTERNAME + "." + process.env.USERDNSDOMAIN) : null;
-var hostName:string   = process.env.IP   || process.env.OPENSHIFT_NODEJS_IP || hostNameForWindows || '0.0.0.0';
+var hostName:string   = process.env.IP   || process.env.OPENSHIFT_NODEJS_IP || hostNameForWindows || '127.0.0.1';
+
+var env:string;
+var envs:any = process.env;
+for (env in envs) {
+  console.log("ENV: "+env);
+}
 //let mkdirp = require(mkdirp);
 
 mkdirp("./Public/Images/", function(err){
