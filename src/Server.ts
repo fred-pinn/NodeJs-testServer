@@ -82,6 +82,8 @@ var port:number = parseInt((process.env.PORT || process.env.OPENSHIFT_NODEJS_POR
 let hostNameForWindows = (process.env.COMPUTERNAME  && process.env.USERDNSDOMAIN ) ? (process.env.COMPUTERNAME + "." + process.env.USERDNSDOMAIN) : null;
 var hostName:string   = process.env.IP   || process.env.OPENSHIFT_NODEJS_IP || hostNameForWindows || '127.0.0.1';
 
+
+/* Dump the environmental values */
 var env:string;
 var envs:any = process.env;
 for (env in envs) {

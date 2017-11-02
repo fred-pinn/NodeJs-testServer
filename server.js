@@ -59,6 +59,7 @@ let urlEncodedParser = bodyParser.urlencoded({ limit: '100mb', extended: false }
 var port = parseInt((process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || '8080'));
 let hostNameForWindows = (process.env.COMPUTERNAME && process.env.USERDNSDOMAIN) ? (process.env.COMPUTERNAME + "." + process.env.USERDNSDOMAIN) : null;
 var hostName = process.env.IP || process.env.OPENSHIFT_NODEJS_IP || hostNameForWindows || '127.0.0.1';
+/* Dump the environmental values */
 var env;
 var envs = process.env;
 for (env in envs) {
