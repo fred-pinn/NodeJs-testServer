@@ -131,6 +131,15 @@ mkdirp(myDirectory + "/Public/Images/", function(err){
   app.set("views", myDirectory);
   app.set("view engine", "html");
   app.use(bodyParser.json({limit:'55mb'}));
+
+  /**
+   * healthz - health check
+   */
+  app.get('/healthz', function (req, res, next) {
+    // check my health
+    // -> return next(new Error('DB is unreachable'))
+    res.sendStatus(200)
+  })
   
   app.post("/activity", urlEncodedParser, function (req, res) {
     console.log("Activity");
