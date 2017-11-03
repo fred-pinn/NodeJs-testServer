@@ -17,6 +17,7 @@ import * as ObjectAssign from "object-assign";
 import * as mongodb from "mongodb";
 import * as copyFile from "fs-copy-file";
 
+let server:http.Server = null;
 let myDirectory:string = process.cwd();
 console.log("My directory is: "+myDirectory);
 
@@ -138,10 +139,10 @@ mkdirp(myDirectory + "/Public/Images/", function(err){
   app.get('/healthz', function (req, res, next) {
     // check my health
     // -> return next(new Error('DB is unreachable'))
-    console.log("I am healthy");
+
     res.sendStatus(200)
   })
-console.log("Added /healthz");
+
 
   
   app.post("/activity", urlEncodedParser, function (req, res) {
@@ -315,7 +316,7 @@ initDb(function(err){
   hostName = "0.0.0.0";
   //NODEJS_TESTSERVER_PORT
   //NODEJS_TESTSERVER_SERVICE_PORT
-  let server:http.Server;
+
   try {
   server = app.listen(port , hostName, function(err){
     let host = server.address().address;
@@ -326,9 +327,26 @@ initDb(function(err){
   });
 } catch (ee) {
   console.error("FATAL: Could not listen on: "+hostName+":"+port + ", Reason"+ee,ee);
+  process.exit(0);
 }
   
  // app.set('view-engine', 'html');
   app.use(express.static(myDirectory + "/Public"));
 });
 
+process.on('SIGTERM', () => {
+  
+  if (server) {
+    server.close(function (){
+      process.exit(0);
+    });
+  } else {
+    process.exit(0);
+  }
+ //   .then() => Promise.all([
+ //     console.log("Disconnecting");
+ //   ])
+ //  .then(() => process.exit(0))
+  // .catch((err) => process.exit(-1))
+    
+});

@@ -12,6 +12,7 @@ const ejs = require("ejs");
 const ObjectAssign = require("object-assign");
 const mongodb = require("mongodb");
 const copyFile = require("fs-copy-file");
+let server = null;
 let myDirectory = process.cwd();
 console.log("My directory is: " + myDirectory);
 console.log("SERVER started");
@@ -105,10 +106,8 @@ mkdirp(myDirectory + "/Public/Images/", function (err) {
     app.get('/healthz', function (req, res, next) {
         // check my health
         // -> return next(new Error('DB is unreachable'))
-        console.log("I am healthy");
         res.sendStatus(200);
     });
-    console.log("Added /healthz");
     app.post("/activity", urlEncodedParser, function (req, res) {
         console.log("Activity");
         let data = req.body.data;
@@ -247,7 +246,6 @@ mkdirp(myDirectory + "/Public/Images/", function (err) {
     hostName = "0.0.0.0";
     //NODEJS_TESTSERVER_PORT
     //NODEJS_TESTSERVER_SERVICE_PORT
-    let server;
     try {
         server = app.listen(port, hostName, function (err) {
             let host = server.address().address;
@@ -257,8 +255,24 @@ mkdirp(myDirectory + "/Public/Images/", function (err) {
     }
     catch (ee) {
         console.error("FATAL: Could not listen on: " + hostName + ":" + port + ", Reason" + ee, ee);
+        process.exit(0);
     }
     // app.set('view-engine', 'html');
     app.use(express.static(myDirectory + "/Public"));
+});
+process.on('SIGTERM', () => {
+    if (server) {
+        server.close(function () {
+            process.exit(0);
+        });
+    }
+    else {
+        process.exit(0);
+    }
+    //   .then() => Promise.all([
+    //     console.log("Disconnecting");
+    //   ])
+    //  .then(() => process.exit(0))
+    // .catch((err) => process.exit(-1))
 });
 //# sourceMappingURL=server.js.map
