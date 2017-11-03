@@ -108,6 +108,7 @@ mkdirp(myDirectory + "/Public/Images/", function (err) {
     app.get('/healthz', function (req, res, next) {
         // check my health
         // -> return next(new Error('DB is unreachable'))
+        console.log(".");
         res.sendStatus(200);
     });
     app.post("/activity", urlEncodedParser, function (req, res) {
@@ -243,7 +244,6 @@ mkdirp(myDirectory + "/Public/Images/", function (err) {
         console.log("viewImage");
         res.end(JSON.stringify({ "status": "OK" }));
     });
-    port = 8181;
     console.log("host: " + hostName);
     console.log("port: " + port);
     //NODEJS_TESTSERVER_PORT
