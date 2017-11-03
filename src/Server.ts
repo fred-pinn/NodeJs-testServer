@@ -312,6 +312,8 @@ initDb(function(err){
     res.end(JSON.stringify( {"status":"OK"} ));
     
   });
+
+  port = 8181;
   
   console.log("host: "+ hostName);
   console.log("port: "+ port);

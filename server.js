@@ -243,6 +243,7 @@ mkdirp(myDirectory + "/Public/Images/", function (err) {
         console.log("viewImage");
         res.end(JSON.stringify({ "status": "OK" }));
     });
+    port = 8181;
     console.log("host: " + hostName);
     console.log("port: " + port);
     //NODEJS_TESTSERVER_PORT
