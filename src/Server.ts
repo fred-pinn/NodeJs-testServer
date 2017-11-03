@@ -88,24 +88,26 @@ let initDb:Function = function(callback) {
 
 let pendingActions:Array<Action> = new Array<Action>();
 
-
+var env:string;
+var envs:any = process.env;
+for (env in envs) {
+  console.log("ENV: "+env + ": " +envs[env]);
+}
 
 //import ExampleResource from 'example-resource'
 let noPadding:boolean = false;
 let htmlRender = new HtmlRender();
 let app = express();
 let urlEncodedParser = bodyParser.urlencoded ( { limit: '100mb', extended: false } );
-var port:number = parseInt((process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || process.env.NODEJS_TESTSERVER_SERVICE_PORT || '8181'));
+var port:number = parseInt((process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || envs["NODEJS_TESTSERVER_SERVICE_PORT"] || '8181'));
 let hostNameForWindows = (process.env.COMPUTERNAME  && process.env.USERDNSDOMAIN ) ? (process.env.COMPUTERNAME + "." + process.env.USERDNSDOMAIN) : null;
-var hostName:string   = process.env.IP   || process.env.OPENSHIFT_NODEJS_IP || process.env.NODEJS_TESTSERVER_SERVICE_HOST || hostNameForWindows || '0.0.0.0';
+var hostName:string   = process.env.IP   || process.env.OPENSHIFT_NODEJS_IP ||  envs["NODEJS_TESTSERVER_SERVICE_HOST"] || hostNameForWindows || '0.0.0.0';
 
 
 /* Dump the environmental values */
 var env:string;
 var envs:any = process.env;
-for (env in envs) {
-  console.log("ENV: "+env + ": " +envs[env]);
-}
+
 //let mkdirp = require(mkdirp);
 
 mkdirp(myDirectory + "/Public/Images/", function(err){
@@ -315,7 +317,8 @@ initDb(function(err){
   console.log("port: "+ port);
 
   //NODEJS_TESTSERVER_PORT
-  //NODEJS_TESTSERVER_SERVICE_PORT
+  console.log("NODEJS_TESTSERVER_SERVICE_PORT: "+ envs["NODEJS_TESTSERVER_SERVICE_PORT"] );
+  console.log("NODEJS_TESTSERVER_SERVICE_HOST: "+ envs["NODEJS_TESTSERVER_SERVICE_HOST"] );
 
   try {
   server = app.listen(port , hostName, function(err){

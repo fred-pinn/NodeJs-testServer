@@ -11,3 +11,5 @@
 /node_modules/*
 /node_modules
 /doc
+/INGRESS.txt
+/INGRESS-YAML.txt

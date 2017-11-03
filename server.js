@@ -61,20 +61,22 @@ let initDb = function (callback) {
     });
 };
 let pendingActions = new Array();
-//import ExampleResource from 'example-resource'
-let noPadding = false;
-let htmlRender = new HtmlRender_1.default();
-let app = express();
-let urlEncodedParser = bodyParser.urlencoded({ limit: '100mb', extended: false });
-var port = parseInt((process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || process.env.NODEJS_TESTSERVER_SERVICE_PORT || '8181'));
-let hostNameForWindows = (process.env.COMPUTERNAME && process.env.USERDNSDOMAIN) ? (process.env.COMPUTERNAME + "." + process.env.USERDNSDOMAIN) : null;
-var hostName = process.env.IP || process.env.OPENSHIFT_NODEJS_IP || process.env.NODEJS_TESTSERVER_SERVICE_HOST || hostNameForWindows || '0.0.0.0';
-/* Dump the environmental values */
 var env;
 var envs = process.env;
 for (env in envs) {
     console.log("ENV: " + env + ": " + envs[env]);
 }
+//import ExampleResource from 'example-resource'
+let noPadding = false;
+let htmlRender = new HtmlRender_1.default();
+let app = express();
+let urlEncodedParser = bodyParser.urlencoded({ limit: '100mb', extended: false });
+var port = parseInt((process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || envs["NODEJS_TESTSERVER_SERVICE_PORT"] || '8181'));
+let hostNameForWindows = (process.env.COMPUTERNAME && process.env.USERDNSDOMAIN) ? (process.env.COMPUTERNAME + "." + process.env.USERDNSDOMAIN) : null;
+var hostName = process.env.IP || process.env.OPENSHIFT_NODEJS_IP || envs["NODEJS_TESTSERVER_SERVICE_HOST"] || hostNameForWindows || '0.0.0.0';
+/* Dump the environmental values */
+var env;
+var envs = process.env;
 //let mkdirp = require(mkdirp);
 mkdirp(myDirectory + "/Public/Images/", function (err) {
     let filesys = fs;
@@ -244,7 +246,8 @@ mkdirp(myDirectory + "/Public/Images/", function (err) {
     console.log("host: " + hostName);
     console.log("port: " + port);
     //NODEJS_TESTSERVER_PORT
-    //NODEJS_TESTSERVER_SERVICE_PORT
+    console.log("NODEJS_TESTSERVER_SERVICE_PORT: " + envs["NODEJS_TESTSERVER_SERVICE_PORT"]);
+    console.log("NODEJS_TESTSERVER_SERVICE_HOST: " + envs["NODEJS_TESTSERVER_SERVICE_HOST"]);
     try {
         server = app.listen(port, hostName, function (err) {
             let host = server.address().address;
