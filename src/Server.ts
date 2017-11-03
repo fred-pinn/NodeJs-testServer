@@ -95,9 +95,9 @@ let noPadding:boolean = false;
 let htmlRender = new HtmlRender();
 let app = express();
 let urlEncodedParser = bodyParser.urlencoded ( { limit: '100mb', extended: false } );
-var port:number = parseInt((process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || '8181'));
+var port:number = parseInt((process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || process.env.NODEJS_TESTSERVER_SERVICE_PORT || '8181'));
 let hostNameForWindows = (process.env.COMPUTERNAME  && process.env.USERDNSDOMAIN ) ? (process.env.COMPUTERNAME + "." + process.env.USERDNSDOMAIN) : null;
-var hostName:string   = process.env.IP   || process.env.OPENSHIFT_NODEJS_IP || hostNameForWindows || '0.0.0.0';
+var hostName:string   = process.env.IP   || process.env.OPENSHIFT_NODEJS_IP || process.env.NODEJS_TESTSERVER_SERVICE_HOST || hostNameForWindows || '0.0.0.0';
 
 
 /* Dump the environmental values */
@@ -313,7 +313,7 @@ initDb(function(err){
   
   console.log("host: "+ hostName);
   console.log("port: "+ port);
-  hostName = "0.0.0.0";
+
   //NODEJS_TESTSERVER_PORT
   //NODEJS_TESTSERVER_SERVICE_PORT
 
