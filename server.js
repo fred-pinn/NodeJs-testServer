@@ -267,9 +267,30 @@ mkdirp(myDirectory + "/Public/Images/", function (err) {
     // app.set('view-engine', 'html');
     app.use(express.static(myDirectory + "/Public"));
 });
-process.on('SIGTERM', () => {
+process.on('SIGUSR1', () => {
+    console.log("SIGUSR1 Signal");
     if (server) {
         server.close(function () {
+            console.log("SIGUSR1: closed server");
+            server = null;
+            process.exit(0);
+        });
+    }
+    else {
+        process.exit(0);
+    }
+    //   .then() => Promise.all([
+    //     console.log("Disconnecting");
+    //   ])
+    //  .then(() => process.exit(0))
+    // .catch((err) => process.exit(-1))
+});
+process.on('SIGTERM', () => {
+    console.log("SIGTERM Signal");
+    if (server) {
+        server.close(function () {
+            console.log("SIGTERM: closed server");
+            server = null;
             process.exit(0);
         });
     }
